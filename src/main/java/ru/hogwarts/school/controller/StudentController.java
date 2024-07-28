@@ -6,7 +6,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @RestController
 //устанавливаем базовый url
@@ -32,10 +32,13 @@ public class StudentController {
     public ResponseEntity<Collection<Student>> getAllStudent() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
-
+//!!!!!!!!! изменена реализация фильтра добалена проверка на возраст
     @GetMapping("/search")
-    public List<Student> filterByAge(@RequestParam int age) {
-        return studentService.filterByAge(age);
+    public ResponseEntity<Collection<Student>> findStudent(@RequestParam(required = false) int age) {
+        if (age > 0) {
+            return ResponseEntity.ok(studentService.findByAge(age));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
     }
 
 

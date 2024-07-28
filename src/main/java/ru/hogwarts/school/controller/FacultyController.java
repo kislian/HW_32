@@ -7,6 +7,7 @@ import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Collections;
 
 @RestController
 //устанавливаем базовый url
@@ -50,9 +51,12 @@ public class FacultyController {
     public Faculty deleteFaculty(@PathVariable Long id) {
         return facultyService.deleteFaculty(id);
     }
-
+    //добавлена проверка переменной color на null  и пустоту
     @GetMapping("/color")//GET http://localhost:8080/faculty/color?color=white
-    public List<Faculty> filterByColor(@RequestParam String color) {
-        return facultyService.filterByColor(color);
+    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
+        if (color != null && !color.isBlank()) {
+            return ResponseEntity.ok(facultyService.findByColor(color));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
     }
 }
